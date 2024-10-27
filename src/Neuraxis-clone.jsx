@@ -3,6 +3,8 @@ import bg from './assets/images/bg.png';
 import hero from './assets/images/hero.jpg';
 import hero2 from './assets/images/hero2.jpg';
 import HomeWorks from './components/HomeWorks';
+import Header from './components/Header';
+import Features from './components/HFeatures';
 import { replace, useNavigate } from 'react-router-dom';
 
 export default function NeuraxisClone() {
@@ -45,9 +47,10 @@ export default function NeuraxisClone() {
             <div className="bg-orange-500 text-white p-2 rounded-full">💬</div>
             <div className="bg-orange-500 text-white p-2 rounded-full">👐</div>
           </div>
+          <div className='flex justify-center'>
           <p className="text-gray-600 mb-8 max-w-[550px] flex justify-center">
             Seamless speech-to-sign and sign-to-speech conversion, bridging communication gaps effortlessly.
-          </p>
+          </p></div>
           <button className="px-6 py-2 bg-orange-500 text-white rounded-[40px] text-lg font-semibold hover:bg-orange-600">
             Take a Demo
           </button>
