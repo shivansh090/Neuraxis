@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bg from '../assets/images/bg.png';
-import { configDotenv } from 'dotenv';
 
 export default function Text2ISL() {
     const homeRef = useRef(null);
@@ -20,27 +19,51 @@ export default function Text2ISL() {
 
     const navigate = useNavigate();
 
-    const scrollToSection = (ref) => {
-        ref.current.scrollIntoView({ behavior: 'smooth' });
-    };
+    let retryCount = 0;
+    const maxRetries = 3;
 
     const record = () => {
+        console.log("Starting speech recognition");
+
+        if (!window.webkitSpeechRecognition) {
+            console.error("Speech recognition not supported in this browser");
+            return;
+        }
+
         const recognition = new window.webkitSpeechRecognition();
         recognition.lang = 'en-IN';
 
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
+            console.log("Transcript:", transcript);
             setTextInput(transcript);
+            retryCount = 0; // Reset retry count on successful recognition
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Speech recognition error:", event.error);
+
+            if (event.error === 'network' && retryCount < maxRetries) {
+                retryCount++;
+                setTimeout(record, 2000); // Retry after 2 seconds
+            } else {
+                console.error("Max retries reached or a non-network error occurred");
+            }
+        };
+
+        recognition.onend = () => {
+            console.log("Speech recognition ended");
         };
 
         recognition.start();
     };
 
+
     const callAnimationApi = async () => {
         setIsLoading(true);
         setVideoError(null);
         try {
-            const response = await fetch(`${process.env.API_URL}/animation/`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/animation/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -167,7 +190,7 @@ export default function Text2ISL() {
             </header>
 
             <main className="max-w-6xl flex flex-col mx-auto px-4">
-                <section ref={demoRef} className="py-20">
+                <section ref={demoRef} className="pt-8 pb-20">
                     <h2 className="text-3xl font-bold text-center mb-12">Audio/Text Input to ISL Output</h2>
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="space-y-4">
