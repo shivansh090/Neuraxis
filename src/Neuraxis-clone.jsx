@@ -157,10 +157,12 @@
 //     </div>
 //   )
 // }
+
+
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import bg from './assets/images/bg.png';
 import HomeWorks from './components/HomeWorks';
-import { useNavigate } from 'react-router-dom';
 
 export default function NeuraxisClone() {
   const homeRef = useRef(null);
@@ -174,16 +176,9 @@ export default function NeuraxisClone() {
   const videoPlayerRef = useRef(null);
   const [videoError, setVideoError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   
   const navigate = useNavigate();
-
-  // Use require.context to get all video files
-  const videoContext = require.context('./assets/videos', false, /\.mp4$/);
-  const videoFiles = videoContext.keys().reduce((acc, path) => {
-    const key = path.replace(/^\.\//, '').replace(/\.mp4$/, '');
-    acc[key] = videoContext(path);
-    return acc;
-  }, {});
 
   const scrollToSection = (ref) => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
@@ -217,7 +212,7 @@ export default function NeuraxisClone() {
       if (response.ok) {
         const data = await response.json();
         setWords(data.words || []);
-        setCurrentWordIndex(0);
+        setCurrentWordIndex(-1); // Reset to -1 so we start from the beginning
       } else {
         console.error('Failed to fetch animation data');
         setVideoError('Failed to fetch animation data. Please try again.');
@@ -236,11 +231,15 @@ export default function NeuraxisClone() {
   };
 
   const playPause = () => {
-    const videoPlayer = videoPlayerRef.current;
-    if (videoPlayer.paused) {
-      playNextVideo();
+    if (isPlaying) {
+      videoPlayerRef.current.pause();
+      setIsPlaying(false);
     } else {
-      videoPlayer.pause();
+      if (currentWordIndex === -1) {
+        setCurrentWordIndex(0);
+      }
+      playNextVideo();
+      setIsPlaying(true);
     }
   };
 
@@ -250,24 +249,24 @@ export default function NeuraxisClone() {
       const word = words[currentWordIndex];
       const videoSrc = getVideoPath(word);
       if (videoSrc) {
-        const videoPlayer = videoPlayerRef.current;
-        videoPlayer.src = videoSrc;
-        videoPlayer.load(); // Ensure the video is loaded before playing
-        videoPlayer.play().catch(error => {
+        videoPlayerRef.current.src = videoSrc;
+        videoPlayerRef.current.play().catch(error => {
           console.error('Error playing video:', error);
           setVideoError(`Error playing video: ${word}. Please check the video files.`);
+          setIsPlaying(false);
         });
       } else {
         setVideoError(`No video found for: ${word}`);
-        // Move to the next word if video is not found
-        setCurrentWordIndex(prevIndex => prevIndex + 1);
+        setIsPlaying(false);
       }
+    } else {
+      setIsPlaying(false);
     }
   };
 
   const getVideoPath = (word) => {
     const capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    return videoFiles[capitalizedWord] || null;
+    return `${process.env.PUBLIC_URL}/videos/${capitalizedWord}.mp4`;
   };
 
   useEffect(() => {
@@ -277,7 +276,9 @@ export default function NeuraxisClone() {
       setCurrentWordIndex(prevIndex => {
         const nextIndex = prevIndex + 1;
         if (nextIndex < words.length) {
-          setTimeout(() => playNextVideo(), 100); // Add a small delay before playing the next video
+          playNextVideo();
+        } else {
+          setIsPlaying(false);
         }
         return nextIndex;
       });
@@ -286,8 +287,7 @@ export default function NeuraxisClone() {
     const handleVideoError = (e) => {
       console.error('Video error:', e);
       setVideoError(`Error loading video: ${words[currentWordIndex]}. Please check the video files.`);
-      // Move to the next word if there's an error
-      setCurrentWordIndex(prevIndex => prevIndex + 1);
+      setIsPlaying(false);
     };
 
     videoPlayer.addEventListener('ended', handleVideoEnd);
@@ -297,15 +297,13 @@ export default function NeuraxisClone() {
       videoPlayer.removeEventListener('ended', handleVideoEnd);
       videoPlayer.removeEventListener('error', handleVideoError);
     };
-  }, [words]);
+  }, [words, currentWordIndex]);
 
-  // Reset video player when words change
   useEffect(() => {
-    if (words.length > 0) {
-      setCurrentWordIndex(0);
+    if (currentWordIndex === 0 && isPlaying) {
       playNextVideo();
     }
-  }, [words]);
+  }, [currentWordIndex, isPlaying]);
 
   return (
     <div className="min-h-screen bg-repeat" style={{ backgroundImage: `url(${bg})` }}>
@@ -357,13 +355,13 @@ export default function NeuraxisClone() {
               </div>
             </div>
             <div className="bg-gray-200 rounded-lg p-4">
-              <video ref={videoPlayerRef} controls width="600" height="350" preload="auto"></video>
+              <video autoplay="autoplay" ref={videoPlayerRef} width="600" height="350" preload="auto"></video>
               <button 
                 className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
                 onClick={playPause}
                 disabled={isLoading || words.length === 0}
               >
-                Play/Pause
+                {isPlaying ? 'Pause' : 'Play'}
               </button>
               {videoError && (
                 <p className="text-red-500 mt-2" role="alert">{videoError}</p>
