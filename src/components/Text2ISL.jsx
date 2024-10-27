@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bg from '../assets/images/bg.png';
+import { configDotenv } from 'dotenv';
 
 export default function Text2ISL() {
     const homeRef = useRef(null);
@@ -39,7 +40,7 @@ export default function Text2ISL() {
         setIsLoading(true);
         setVideoError(null);
         try {
-            const response = await fetch('http://localhost:8000/api/animation/', {
+            const response = await fetch(`${process.env.API_URL}/animation/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
