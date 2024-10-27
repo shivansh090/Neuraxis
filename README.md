@@ -3,7 +3,7 @@
 # neuraxis: Real-Time ISL for a World Without Barriers
 
 Below is the figma design of our website which hosts all features of the application:
-<div style="display: inline-block;">
+<div style="display: flex;justify-content:start;align-item: start">
   <img src="./src/assets/Neuraxis comp design.png" height="1800">
   <img src="./src/assets/Auth.png" width="400">
 </div>
