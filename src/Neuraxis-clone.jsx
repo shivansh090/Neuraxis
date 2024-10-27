@@ -45,9 +45,10 @@ export default function NeuraxisClone() {
             <div className="bg-orange-500 text-white p-2 rounded-full">💬</div>
             <div className="bg-orange-500 text-white p-2 rounded-full">👐</div>
           </div>
+          <div className='flex justify-center'>
           <p className="text-gray-600 mb-8 max-w-[550px] flex justify-center">
             Seamless speech-to-sign and sign-to-speech conversion, bridging communication gaps effortlessly.
-          </p>
+          </p></div>
           <button className="px-6 py-2 bg-orange-500 text-white rounded-[40px] text-lg font-semibold hover:bg-orange-600">
             Take a Demo
           </button>
