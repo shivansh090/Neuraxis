@@ -3,6 +3,8 @@ import bg from './assets/images/bg.png';
 import hero from './assets/images/hero.jpg';
 import hero2 from './assets/images/hero2.jpg';
 import HomeWorks from './components/HomeWorks';
+import Header from './components/Header';
+import Features from './components/HFeatures';
 import { replace, useNavigate } from 'react-router-dom';
 
 export default function NeuraxisClone() {
