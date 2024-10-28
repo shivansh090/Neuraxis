@@ -51,7 +51,7 @@ export default function NeuraxisClone() {
           <p className="text-gray-600 mb-8 max-w-[550px] flex justify-center">
             Seamless speech-to-sign and sign-to-speech conversion, bridging communication gaps effortlessly.
           </p></div>
-          <button className="px-6 py-2 bg-orange-500 text-white rounded-[40px] text-lg font-semibold hover:bg-orange-600">
+          <button onClick={()=> navigate('/text2isl' )} className="px-6 py-2 bg-orange-500 text-white rounded-[40px] text-lg font-semibold hover:bg-orange-600">
             Take a Demo
           </button>
 
@@ -99,9 +99,9 @@ export default function NeuraxisClone() {
                 <div className="flex">
                   <input
                     type="text"
-                    placeholder="Enter your text input here"
+                    placeholder="Click Try Now button below to access"
                     className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    value={textInput}
+                    value=""
                     onChange={(e) => setTextInput(e.target.value)}
                   />
                   <button className="px-4 py-2 bg-orange-500 text-white rounded-r-md hover:bg-orange-600">
@@ -111,11 +111,17 @@ export default function NeuraxisClone() {
                   </button>
                 </div>
               </div>
+              <div className='flex justify-center pt-10'>
+              <button onClick={()=> navigate('/text2isl' )} className="px-6 items-c py-2 bg-orange-500 text-white rounded-[40px] text-lg font-semibold hover:bg-orange-600">
+            Try Now
+          </button>
+              </div>
             </div>
             <div className="bg-gray-200 rounded-lg ">
               <img src={hero2} className='overflow-hidden rounded-2xl '/>
             </div>
           </div>
+          
         </section>
 
         <section  className="py-20">
