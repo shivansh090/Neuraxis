@@ -109,18 +109,30 @@ export default function Text2ISL() {
     const playNextVideo = () => {
         if (currentWordIndex < words.length) {
             setVideoError(null);
-            const word = words[currentWordIndex];
-            if (word) {
-                const videoSrc = getVideoPath(word);
+            const currentWord = words[currentWordIndex];
+    
+            if (currentWord) {
+                // Preload the next video if it exists
+                const nextWordIndex = currentWordIndex + 1;
+                if (nextWordIndex < words.length) {
+                    const nextVideoSrc = getVideoPath(words[nextWordIndex]);
+                    if (nextVideoSrc) {
+                        const nextVideo = document.createElement('video');
+                        nextVideo.src = nextVideoSrc;
+                        nextVideo.load(); // Preload
+                    }
+                }
+    
+                const videoSrc = getVideoPath(currentWord);
                 if (videoSrc) {
                     videoPlayerRef.current.src = videoSrc;
                     videoPlayerRef.current.play().catch(error => {
                         console.error('Error playing video:', error);
-                        setVideoError(`Error playing video: ${word}. Please check the video files.`);
+                        setVideoError(`Error playing video: ${currentWord}. Please check the video files.`);
                         handleVideoEnd();
                     });
                 } else {
-                    setVideoError(`No video found for: ${word}`);
+                    setVideoError(`No video found for: ${currentWord}`);
                     handleVideoEnd();
                 }
             } else {
@@ -132,6 +144,7 @@ export default function Text2ISL() {
             setCurrentWordIndex(-1);
         }
     };
+    
 
     const getVideoPath = (word) => {
         if (typeof word !== 'string') {
