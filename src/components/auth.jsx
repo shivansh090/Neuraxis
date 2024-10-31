@@ -1,13 +1,47 @@
 import { useState } from 'react'
-import { Mic, MessageSquare, VolumeX, Volume2 } from 'lucide-react'
+import { Mic, MessageSquare, VolumeX, Volume2, Info } from 'lucide-react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import bg from '../assets/images/bg.png'
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState('signup')
-    const navigate= useNavigate();
+  const navigate = useNavigate();
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleDescription = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
-    <div style={{backgroundImage:`url(${bg})`}}  className="min-h-screen bg-gray-50 flex flex-col">
+    <div style={{ backgroundImage: `url(${bg})` }} className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-1 ml-1 mb-4" role="alert">
+        <div className="flex">
+          <div className="py-1">
+            <Info className="h-6 w-6 text-blue-500 mr-4" />
+          </div>
+          <div>
+            <p className="font-bold">Demonstrational Version</p>
+            <p className="hidden sm:block">
+              {process.env.REACT_APP_INFO_DESC}
+            </p>
+            {/* Show "Show More/Less" on smaller screens */}
+            <div className="sm:hidden">
+              <button
+                onClick={toggleDescription}
+                className="text-blue-500 text-sm"
+              >
+                {isExpanded ? 'Show Less' : 'Show More'}
+              </button>
+              {isExpanded && (
+                <p className="mt-2">
+                  This is just for deployment. The Django model is available in my README but its deployment is paid, so for demonstration, I created another simple Express API without ML. Also, authentication is disabled for demo.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
       <header className="">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -17,7 +51,7 @@ export default function AuthPage() {
               </div>
             </div>
             <div className="flex items-center">
-              <button onClick={()=> navigate('/', { replace: true })} className="bg-orange-500 text-white rounded-md px-3 py-2 text-sm font-medium">
+              <button onClick={() => navigate('/', { replace: true })} className="bg-orange-500 text-white rounded-md px-3 py-2 text-sm font-medium">
                 Home
               </button>
             </div>
@@ -43,22 +77,20 @@ export default function AuthPage() {
                 <button
                   type="button"
                   onClick={() => setActiveTab('signup')}
-                  className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
-                    activeTab === 'signup'
-                      ? 'text-gray-900 bg-gray-50'
-                      : 'text-gray-500 hover:bg-gray-50'
-                  }`}
+                  className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${activeTab === 'signup'
+                    ? 'text-gray-900 bg-gray-50'
+                    : 'text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
                   Sign Up
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab('login')}
-                  className={`-ml-px relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
-                    activeTab === 'login'
-                      ? 'text-gray-900 bg-gray-50'
-                      : 'text-gray-500 hover:bg-gray-50'
-                  }`}
+                  className={`-ml-px relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${activeTab === 'login'
+                    ? 'text-gray-900 bg-gray-50'
+                    : 'text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
                   Login
                 </button>
@@ -143,6 +175,6 @@ export default function AuthPage() {
         </div>
       </footer>
     </div>
-    
+
   )
 }

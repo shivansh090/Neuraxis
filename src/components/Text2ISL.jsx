@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bg from '../assets/images/bg.png';
+import { Info } from 'lucide-react';
 
 export default function Text2ISL() {
     const homeRef = useRef(null);
@@ -110,7 +111,7 @@ export default function Text2ISL() {
         if (currentWordIndex < words.length) {
             setVideoError(null);
             const currentWord = words[currentWordIndex];
-    
+
             if (currentWord) {
                 // Preload the next video if it exists
                 const nextWordIndex = currentWordIndex + 1;
@@ -122,7 +123,7 @@ export default function Text2ISL() {
                         nextVideo.load(); // Preload
                     }
                 }
-    
+
                 const videoSrc = getVideoPath(currentWord);
                 if (videoSrc) {
                     videoPlayerRef.current.src = videoSrc;
@@ -144,7 +145,7 @@ export default function Text2ISL() {
             setCurrentWordIndex(-1);
         }
     };
-    
+
 
     const getVideoPath = (word) => {
         if (typeof word !== 'string') {
@@ -183,8 +184,42 @@ export default function Text2ISL() {
         }
     }, [currentWordIndex, isPlaying]);
 
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const toggleDescription = () => {
+        setIsExpanded(!isExpanded);
+    };
+
     return (
         <div className="min-h-screen bg-repeat" style={{ backgroundImage: `url(${bg})` }}>
+            <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-1 ml-1 mb-4" role="alert">
+                <div className="flex">
+                    <div className="py-1">
+                        <Info className="h-6 w-6 text-blue-500 mr-4" />
+                    </div>
+                    <div>
+                        <p className="font-bold">Demonstrational Version</p>
+                        <p className="hidden sm:block">
+                            {process.env.REACT_APP_INFO_DESC}
+                        </p>
+                        {/* Show "Show More/Less" on smaller screens */}
+                        <div className="sm:hidden">
+                            <button
+                                onClick={toggleDescription}
+                                className="text-blue-500 text-sm"
+                            >
+                                {isExpanded ? 'Show Less' : 'Show More'}
+                            </button>
+                            {isExpanded && (
+                                <p className="mt-2">
+                                    This is just for deployment. The Django model is available in my README but its deployment is paid, so for demonstration, I created another simple Express API without ML. Also, authentication is disabled for demo.
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <header className="">
                 <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
@@ -251,10 +286,10 @@ export default function Text2ISL() {
                                 </ul>
                             </div>
                         </div>
-                        <div className="bg-gray-200 h-[400px] w-[600px] relative overflow-hidden rounded-lg p-4">
-                            <video className='p-3' autoPlay={true} ref={videoPlayerRef} width="600" height="330" preload="auto"></video>
+                        <div className="bg-gray-200 max-h-[400px] max-w-[600px] relative overflow-hidden rounded-lg ">
+                            <video className='' autoPlay={true} ref={videoPlayerRef} width="600" height="330" preload="auto"></video>
                             <button
-                                className="mt-2 px-4 absolute bottom-3 left-[270px] py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
+                                className="mt-2 px-4 absolute bottom-3 right-[50px] py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
                                 onClick={playPause}
                                 disabled={isLoading || words.length === 0}
                             >
