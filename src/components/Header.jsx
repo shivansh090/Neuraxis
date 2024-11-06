@@ -12,6 +12,7 @@ function Header() {
         <a href="#demo">Demo</a>
         <a href="#how-it-works">How it works</a>
       </nav>
+      //These buttons are only visible in auth page
       <div className="auth-buttons">
         <button className="sign-up">Sign Up</button>
         <button className="login">Login</button>
