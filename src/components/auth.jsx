@@ -1,3 +1,4 @@
+// auth.jsx
 import { useState } from 'react'
 import { Mic, MessageSquare, VolumeX, Volume2, Info } from 'lucide-react'
 import { Navigate, useNavigate } from 'react-router-dom'
@@ -130,10 +131,10 @@ export default function AuthPage() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="block  text-sm font-medium text-gray-700">
                   Password
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 abstract">
                   <input
                     id="password"
                     name="password"
