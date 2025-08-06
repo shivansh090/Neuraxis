@@ -1,7 +1,10 @@
 > `(The ML model used for backend is in my repo` https://github.com/shivansh090/text2ISL-Model)
 
 # neuraxis: Real-Time ISL for a World Without Barriers
+People who are deaf, hard of hearing, or non-verbal — and those who rely on Indian Sign Language (ISL) — often face major communication barriers when interacting with individuals unfamiliar with ISL. In classrooms, workplaces, and everyday situations, this gap makes conversations slow and challenging.
 
+Solution:
+neuraxis enables seamless communication between ISL users and non-signers. It translates speech or text into ISL and converts ISL signs back into speech or text — all in real time.
 Below is the figma design of our website which hosts all features of the application:
 <div style="display: flex;justify-content:start;align-item: start">
   <img src="./src/assets/Neuraxis comp design.png" height="1800">
